@@ -6,9 +6,7 @@ const Keybinds = {
     DOWN: "ArrowDown" as const,
     RIGHT: "ArrowRight" as const,
     LEFT: "ArrowLeft" as const,
-    RESET: " " as const,
-    ROTATE_RIGHT: "d" as const,
-    ROTATE_LEFT: "a" as const
+    RESET: " " as const
 };
 
 export function initKeyboardEvents(game: Game) {
@@ -22,8 +20,6 @@ function onKeyDown(key: string, game: Game) {
         [Keybinds.RIGHT]: { type: "MoveRight" },
         [Keybinds.LEFT]: { type: "MoveLeft" },
         [Keybinds.UP]: { type: "RotateRight" },
-        [Keybinds.ROTATE_RIGHT]: { type: "RotateRight" },
-        [Keybinds.ROTATE_LEFT]: { type: "RotateLeft" },
         [Keybinds.RESET]: { type: "Reset" },
     };
     

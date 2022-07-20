@@ -2,7 +2,6 @@ export type GameEvent =
     MoveRightEvent |
     MoveLeftEvent |
     RotateRightEvent |
-    RotateLeftEvent |
     ResetEvent |
     ToggleDownEvent |
     UpdateEvent;
@@ -22,10 +21,6 @@ export interface MoveLeftEvent {
 
 export interface RotateRightEvent {
     type: "RotateRight";
-}
-
-export interface RotateLeftEvent {
-    type: "RotateLeft";
 }
 
 export interface ToggleDownEvent {
