@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    background: black;
+}
+
+#bottom-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 24px;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    z-index: 100;
+}
