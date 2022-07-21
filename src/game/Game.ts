@@ -5,6 +5,7 @@ import { gameReducer } from "../reducers/game.reducer";
 import { GameEvent } from "../types/GameEvent";
 import { GameState } from "../types/GameState";
 import { getHighScore, setHighScore } from "../utils/score";
+import { initTouchEvents } from "./touch-events";
 
 export class Game {
     state: GameState;
@@ -26,6 +27,8 @@ export class Game {
 
     start() {
         initKeyboardEvents(this);
+        initTouchEvents(this);
+        
         requestAnimationFrame(this.update.bind(this));
     }
 

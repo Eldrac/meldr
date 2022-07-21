@@ -33,6 +33,7 @@ export function rotateRightReducer(state: GameState): GameState {
                 }]
             };
         }
+        
         return {
             ...state,
             activeCubes: [{
@@ -71,7 +72,7 @@ export function rotateRightReducer(state: GameState): GameState {
                 y: activeCubes[1].y,
                 x: activeCubes[1].x + 1
             }]
-        }
+        };
     }
 
 
@@ -92,5 +93,5 @@ export function rotateRightReducer(state: GameState): GameState {
             y: activeCubes[1].y - 1,
             x: activeCubes[1].x
         }]
-    }
+    };
 }

@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background: black;
+    overflow-y: hidden;
 }
 
 #bottom-text {
