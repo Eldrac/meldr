@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, DEFAULT_FALL_SPEED } from "../utils/constants";
+import { BOARD_HEIGHT, DEFAULT_FALL_SPEED, FALL_DELAY_BUFFER } from "../utils/constants";
 import { detectClusters } from "../state/detect-clusters";
 import { Cube } from "../types/Cube";
 import { UpdateEvent } from "../types/GameEvent";
@@ -31,17 +31,17 @@ function updateScore(state: GameState, { ellapsedMs }: UpdateEvent): GameState  
     };
 }
 
-function updateActiveCubes(state: GameState, { ellapsedMs }: UpdateEvent): GameState  {
+function updateActiveCubes(state: GameState, { ellapsedMs }: UpdateEvent): GameState {
+    const baseFallDelay = getFallDelay(state.deletions);
     if (!state.activeCubes.length && !state.fallingCubes.length) {
         return {
             ...state,
-            fallDelay: getFallDelay(state.deletions),
+            fallDelay: baseFallDelay,
             activeCubes: createActiveCubes()
         };
     }
 
-
-    if (state.fallDelay > 0 && !state.holdingDown) {
+    if (state.fallDelay > 0 && (!state.holdingDown || baseFallDelay - state.fallDelay < FALL_DELAY_BUFFER)) {
         return {
             ...state,
             fallDelay: state.fallDelay - ellapsedMs
@@ -56,13 +56,15 @@ function updateActiveCubes(state: GameState, { ellapsedMs }: UpdateEvent): GameS
 
     let stabalized = false;
     
+    const calculatedSpeed = getFallSpeed(state.deletions);
+    const speed = state.holdingDown ? Math.min(DEFAULT_FALL_SPEED, calculatedSpeed) : calculatedSpeed;
     for (const cube of state.activeCubes) {
-        const speed = state.holdingDown ? DEFAULT_FALL_SPEED : getFallSpeed(state.deletions);
         const y = cube.y - (ellapsedMs / speed);
 
         const colMax = heights[cube.x];
+
         if (y <= colMax) {
-            if (y >= BOARD_HEIGHT - 1) {
+            if (colMax > BOARD_HEIGHT - 1) {
                 return {
                     ...state,
                     gameOver: true
@@ -70,6 +72,8 @@ function updateActiveCubes(state: GameState, { ellapsedMs }: UpdateEvent): GameS
             }
 
             stabalized = true;
+            heights[cube.x] = colMax + 1;
+
             stableCubes.push({
                 ...cube,
                 y: colMax
@@ -83,6 +87,14 @@ function updateActiveCubes(state: GameState, { ellapsedMs }: UpdateEvent): GameS
     }
 
     if (stabalized) {
+        // Vertical cubes with not enough space above
+        if (activeCubes.some(cube => cube.y >= BOARD_HEIGHT - 1)) {
+            return {
+                ...state,
+                gameOver: true
+            };
+        }
+
         fallingCubes.push(...activeCubes);
         activeCubes = [];
     }
@@ -102,10 +114,12 @@ function updateFallingCubes(state: GameState, { ellapsedMs }: UpdateEvent): Game
     const stableCubes: Cube[] = [...state.stableCubes];
     const fallingCubes: Cube[] = [];
 
+    const speed = Math.min(DEFAULT_FALL_SPEED, getFallSpeed(state.deletions));
     for (const cube of state.fallingCubes) {
-        const y = cube.y - ellapsedMs / DEFAULT_FALL_SPEED;
+        const y = cube.y - ellapsedMs / speed;
         const colMax = heights[cube.x];
         if (y <= colMax) {
+            heights[cube.x] = heights[cube.x] + 1;
             stableCubes.push({
                 ...cube,
                 y: colMax

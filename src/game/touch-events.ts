@@ -54,7 +54,11 @@ function onTouchEnd(event: TouchEvent, game: Game) {
     const touchDuration = new Date().getTime() - lastTouchTime!;
     
     if (!dispatchedAction && touchDuration < 200) {
-        game.dispatch({ type: "RotateRight" });
+        if (game.state.gameOver) {
+            game.dispatch({ type: "Reset" });
+        } else {
+            game.dispatch({ type: "RotateRight" });
+        }
     }
 
     if (holdingDown) {

@@ -22,7 +22,7 @@ function onKeyDown(key: string, game: Game) {
         [Keybinds.UP]: { type: "RotateRight" },
         [Keybinds.RESET]: { type: "Reset" },
     };
-    
+
     if (key in keybindToEvent) {
         game.dispatch(keybindToEvent[key]);
     }
