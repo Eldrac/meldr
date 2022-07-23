@@ -6,6 +6,10 @@ const Keybinds = {
     DOWN: "ArrowDown" as const,
     RIGHT: "ArrowRight" as const,
     LEFT: "ArrowLeft" as const,
+    W: "w" as const,
+    A: "a" as const,
+    S: "s" as const,
+    D: "d" as const,
     RESET: " " as const
 };
 
@@ -21,6 +25,10 @@ function onKeyDown(key: string, game: Game) {
         [Keybinds.LEFT]: { type: "MoveLeft" },
         [Keybinds.UP]: { type: "RotateRight" },
         [Keybinds.RESET]: { type: "Reset" },
+        [Keybinds.W]: { type: "RotateRight" },
+        [Keybinds.A]: { type: "MoveLeft" },
+        [Keybinds.S]: { type: "ToggleDown", toggle: true },
+        [Keybinds.D]: { type: "MoveRight" },
     };
 
     if (key in keybindToEvent) {
@@ -29,7 +37,7 @@ function onKeyDown(key: string, game: Game) {
 }
 
 function onKeyUp(key: string, game: Game) {
-    if (key === Keybinds.DOWN) {
+    if (key === Keybinds.DOWN || key == Keybinds.S) {
         game.dispatch({
             type: "ToggleDown",
             toggle: false

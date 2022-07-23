@@ -6,6 +6,7 @@ import { GameState } from "../types/GameState";
 import { createActiveCubes } from "../state/create-active-cubes";
 import { getHeightMap } from "../state/get-height-map";
 import { getFadeDelay, getFallDelay, getFallSpeed } from "../utils/timers";
+import { getMeldScore } from "../utils/score";
 
 export function updateReducer(state: GameState, event: UpdateEvent): GameState {
     if (state.gameOver) {
@@ -176,7 +177,7 @@ function updateCubeFading(state: GameState, { ellapsedMs }: UpdateEvent): GameSt
             }
         }
         if (clusterFaded) {
-            score += 100 * Math.pow((4 / 3), cluster.length - 4);
+            score += getMeldScore(cluster.length);
         }
     }
 
